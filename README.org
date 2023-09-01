@@ -67,7 +67,7 @@ USAGE: iimatey [status|start|stop|connect]
 In order to connect coder, you`ll need a custom build/branch from https://github.com/coder/coder/pull/6489 until it merges and a release is made.
 
 #+begin_src shell
-coder server --wg-tunnel-host try.ii.nz
+coder server --wg-tunnel-host try.sharing.io
 #+end_src
 
 Here is the build from src:
