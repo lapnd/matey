@@ -13,9 +13,10 @@ export TUNNEL_LOGFILE=$IIMATEY_DIR/tunnel.log
 # You could save this to persist your url.
 # By default, for safety let's generate it on the fly each time
 # Use IIMATEY_WIREGUARD_KEY if set, or default to running `wg keygen` for a new one each time
-export TUNNEL_WIREGUARD_KEY=${IIMATEY_WIREGUARD_KEY:-$(wg genkey)}
+# export TUNNEL_WIREGUARD_KEY=${IIMATEY_WIREGUARD_KEY:-$(wg genkey)}
+export TUNNEL_WIREGUARD_KEY_FILE=${IIMATEY_DIR}/tunnel-key
 # Use IIMATEY_API_URL if set, or default to https://try.cloudnative.coop
-export TUNNEL_API_URL=${IIMATEY_API_URL:-https://try.cloudnative.coop}
+export TUNNEL_API_URL=${IIMATEY_API_URL:-https://try.sharing.io}
 
 # We install to /usr/local/bin... but on OSX it's not in the path by default
 export PATH=/usr/local/bin:$PATH
@@ -24,63 +25,65 @@ export PATH=/usr/local/bin:$PATH
 ACTION=${1:-status}
 case $ACTION in
   status)
-      # List information about tmux
-      if tmux -L ii has-session -t ii 2> /dev/null 1> /dev/null
-      then
-        tmux -L ii list-sessions
-        tmux -L ii has-session -t ii
-        tmux -L ii list-windows -t ii
-      else
-        echo "No tmux sessions on '-L ii' socket"
-      fi
-      # Display how to connect to ttyd
-      if [[ -e $IIMATEY_DIR/ttyd.pid ]]
-      then ps -p $(cat $IIMATEY_DIR/ttyd.pid) 2>&1 > /dev/null && \
+    # List information about tmux
+    if tmux -L ii has-session -t ii 2>/dev/null 1>/dev/null; then
+      tmux -L ii list-sessions
+      tmux -L ii has-session -t ii
+      tmux -L ii list-windows -t ii
+    else
+      echo "No tmux sessions on '-L ii' socket"
+    fi
+    # Display how to connect to ttyd
+    if [[ -e $IIMATEY_DIR/ttyd.pid ]]; then
+      ps -p $(cat $IIMATEY_DIR/ttyd.pid) 2>&1 >/dev/null &&
         echo Connect to ttyd locally via http://localhost:12345
-      fi
-      # Display how to connect to tunnel
-      if [[ -e $IIMATEY_DIR/tunnel.pid ]]
-      then ps -p $(cat $IIMATEY_DIR/tunnel.pid) 2>&1 > /dev/null && \
+    fi
+    # Display how to connect to tunnel
+    if [[ -e $IIMATEY_DIR/tunnel.pid ]]; then
+      ps -p $(cat $IIMATEY_DIR/tunnel.pid) 2>&1 >/dev/null &&
         grep "You can now connect" $IIMATEY_DIR/tunnel.log
-      fi
-      # Display how to connect to tmux directly
-      tmux -L ii has-session -t ii 2>/dev/null 1>/dev/null && \
-        echo Connect to tmux locally via: &&\
-        echo tmux -L ii at
-      echo 'USAGE: iimatey [status|start|stop|connect]'
-  ;;
+    fi
+    # Display how to connect to tmux directly
+    tmux -L ii has-session -t ii 2>/dev/null 1>/dev/null &&
+      echo Connect to tmux locally via: &&
+      echo tmux -L ii at
+    echo 'USAGE: iimatey [status|start|stop|connect]'
+    ;;
   start)
-    # TODO: nicer logic here to detect and start
-    ttyd -p 12345 tmux -L ii at 2>&1 > $TTYD_LOGFILE &
-    echo $! > $IIMATEY_DIR/ttyd.pid
+    # TODO: nicer logic here to detect available port and start
+    ttyd --writable -p 12345 tmux -L ii at 2>&1 >$TTYD_LOGFILE &
+    echo $! >$IIMATEY_DIR/ttyd.pid
     echo ttyd logs are available in $TTYD_LOGFILE
-    tunnel localhost:12345 2>&1 > $TUNNEL_LOGFILE &
-    echo $! > $IIMATEY_DIR/tunnel.pid
+    tunnel localhost:12345 2>&1 >$TUNNEL_LOGFILE &
+    echo $! >$IIMATEY_DIR/tunnel.pid
     echo tunnel logs are available in $TUNNEL_LOGFILE
     sleep 1 # Would be good to just wait till URL is available
     export IIMATEY_URL=$(grep "You can now connect" $IIMATEY_DIR/tunnel.log | sed 'sX.*\(https://.*\)X\1X')
     # echo Connect to tmux locally via: &&\
     # echo tmux -L ii at
-    if $(tmux -L ii has-session -t ii 2>&1 > /dev/null)
-    then tmux -L ii at
-    else tmux -L ii new -e IIMATEY=true -s ii -P -F "$IIMATEY_URL" -n matey
-    echo $! > $IIMATEY_DIR/tmux.pid
+    if $(tmux -L ii has-session -t ii 2>&1 >/dev/null); then
+      tmux -L ii at
+    else
+      tmux -L ii new -e IIMATEY=true -s ii -P -F "$IIMATEY_URL" -n matey
+      echo $! >$IIMATEY_DIR/tmux.pid
     fi
-  ;;
+    ;;
   stop)
     # we won't stop tmux... let's leave it
-    if [[ -e $IIMATEY_DIR/ttyd.pid ]]
-    then kill `cat $IIMATEY_DIR/ttyd.pid` && rm $IIMATEY_DIR/ttyd.pid
+    if [[ -e $IIMATEY_DIR/ttyd.pid ]]; then
+      kill $(cat $IIMATEY_DIR/ttyd.pid) && rm $IIMATEY_DIR/ttyd.pid
     fi
-    if [[ -e $IIMATEY_DIR/tunnel.pid ]]
-    then kill `cat $IIMATEY_DIR/tunnel.pid` && rm $IIMATEY_DIR/tunnel.pid
+    if [[ -e $IIMATEY_DIR/tunnel.pid ]]; then
+      kill $(cat $IIMATEY_DIR/tunnel.pid) && rm $IIMATEY_DIR/tunnel.pid
     fi
-  ;;
+    ;;
   connect)
     # Create new, or connect to old (doesn't start ttyd or tunnel)
-    if $(tmux -L ii has-session -t ii)
-    then tmux -L ii at
-    else tmux -L ii new -c $HOME -e IIMATEY=true -s ii
-    echo $! > $IIMATEY_DIR/tmux.pid
+    if $(tmux -L ii has-session -t ii); then
+      tmux -L ii at
+    else
+      tmux -L ii new -c $HOME -e IIMATEY=true -s ii
+      echo $! >$IIMATEY_DIR/tmux.pid
     fi
+    ;;
 esac
