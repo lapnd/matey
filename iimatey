@@ -53,8 +53,8 @@ case $ACTION in
     # TODO: nicer logic here to detect available port and start
     # ttyd support -p 0 (random port), but have not reliable way to grab it
     #export TTYD_PORT=${TTYD_PORT:12346}
-    # ttyd --writable -p $TTYD_PORT tmux -L ii at 2>&1 >$TTYD_LOGFILE &
-    ttyd -p 12345 tmux -L ii at 2>&1 >$TTYD_LOGFILE &
+    ttyd --writable -p 12345 tmux -L ii at 2>&1 >$TTYD_LOGFILE &
+    # ttyd -p 12345 tmux -L ii at 2>&1 >$TTYD_LOGFILE &
     echo $! >$IIMATEY_DIR/ttyd.pid
     echo ttyd logs are available in $TTYD_LOGFILE
     tunnel localhost:12345 2>&1 >$TUNNEL_LOGFILE &
@@ -65,7 +65,7 @@ case $ACTION in
     # echo Connect to tmux locally via: &&\
     # echo tmux -L ii at
     # if $( tmux -L ii has-session -t ii ); then
-    if [ $( tmux -L ii ls 2>/dev/null | wc -l ) -eq 0 ]; then
+    if [ $(tmux -L ii ls 2>/dev/null | wc -l) -eq 0 ]; then
       tmux -L ii new -e IIMATEY=true -s ii -P -F "$IIMATEY_URL" -n matey
       echo $! >$IIMATEY_DIR/tmux.pid
     else
