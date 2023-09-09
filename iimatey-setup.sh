@@ -36,7 +36,6 @@ sudo chmod 0755 /usr/local/bin/tunnel # make executeable
 # WHAT WE NEED
 tmux -V
 ttyd --version
-wg version
 /usr/local/bin/tunnel --version
 echo $PATH | grep /usr/local/bin >/dev/null || echo "You may want to add /usr/local/bin to your PATH"
 
