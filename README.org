@@ -1,11 +1,17 @@
 #+title: iimatey
 
 * Aye, Aye Matey
+
 Does the inky blackness of the termimal on your computer seem a bit dawnting? Then use iimatey to call on a trusted matey to explore it with you!
 #+HTML: <img src="https://user-images.githubusercontent.com/31331/227025347-29538023-f143-46bb-b365-854fae78709c.gif">
-* Install iimatey
-Matey depends on the tools tmux, ttyd, and the [[https://github.com/coder/wgtunnel][coder/wgtunnel]] tunnel client and an runnnig instance of tunneld. These scripts are setup to use the instance of tunneld at https://try.sharing.io which is configured via [[https://github.com/sharingio/infra/tree/uk/apps/tunneld][sharingio/infra]]
 
+* What is it?
+
+iimatey is a shel script that ties together [[https://github.com/tmux/tmux/wiki][tmux]], [[https://github.com/tsl0922/ttyd][ttyd]], and the [[https://github.com/coder/wgtunnel][coder/wgtunnel]] client.
+
+You can run your own instance of tunneld , we run one at https://try.sharing.io which we configure via [[https://github.com/sharingio/infra/tree/uk/apps/tunneld][sharingio/infra]]
+
+* Install iimatey
 ** One line install with the [[https://github.com/ii/matey/blob/canon/iimatey-setup.sh][iimatey-setup.sh]] setup script
 #+begin_src shell
 curl -fsSL https://raw.githubusercontent.com/ii/matey/canon/iimatey-setup.sh | bash
