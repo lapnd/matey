@@ -29,6 +29,7 @@ first [[https://brew.sh][install brew]], then:
 brew install ttyd tmux
 #+end_src
 * Run iimatey
+** get a sharable url to a local terminal
 #+begin_src tmate :window iimatey
 iimatey start
 #+end_src
@@ -72,27 +73,24 @@ tmux -L ii at
 USAGE: iimatey [status|start|stop|connect]
 #+end_example
 
-* Run coder
-In order to connect coder, you`ll need a custom build/branch from https://github.com/coder/coder/pull/6489 until it merges and a release is made.
+** terminal tty client :[[https://github.com/depau/ttyc][depau/ttyc]] depau/ttyc
 
+Build or download a release from : https://github.com/depau/ttyc/releases/tag/ttyc-v0.4
+
+#+begin_src shell
+ttyc -U https://dg5srp8e9gsj6.try.sharing.io
+#+end_src
+* coder
 #+begin_src shell
 coder server --wg-tunnel-host try.sharing.io
 #+end_src
 
 Here is the build from src:
+#+begin_src shell
+coder server --wg-tunnel-host try.ii.nz
+#+end_src
 
 #+begin_example
-hh@Max coder % git remote get-url coder
-git@github.com:coder/coder
-hh@Max coder % git log -1
-commit c90142937e23ef5e573e498a78a16e1c3d7a5317 (HEAD -> tunnelsdk, coder/dean/tunnelsdk)
-Author: Dean Sheather <dean@deansheather.com>
-Date:   Tue Mar 21 03:01:20 2023 +0000
-
-    chore: rename tunnel-host to wgtunnel-host
-hh@Max coder % make
-build/coder-slim_0.19.2-devel+c9014293.tar : 23.79%   (   384 MiB =>   91.3 MiB, build/coder-slim_0.19.2-devel+c9014293.tar.zst)
-hh@Max coder % ./build/coder_0.19.2-devel+c9014293_darwin_amd64 server --wg-tunnel-host try.ii.nz
 Coder v0.19.2-devel+c9014293 - Your Self-Hosted Remote Development Platform
 Using built-in PostgreSQL (/Users/hh/Library/Application Support/coderv2/postgres)
 Started HTTP listener at http://127.0.0.1:3000
