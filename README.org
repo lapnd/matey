@@ -4,20 +4,23 @@
 Does the inky blackness of the termimal on your computer seem a bit dawnting? Then use iimatey to call on a trusted matey to explore it with you!
 #+HTML: <img src="https://user-images.githubusercontent.com/31331/227025347-29538023-f143-46bb-b365-854fae78709c.gif">
 * Install iimatey
-Matey depends on the tools tmux, ttyd, and wireguard.  To install, first:
-** Install the prerequisites
-*** on ubuntu
-#+begin_src shell
-apt install tmux,ttyd,wg
-#+end_src
-*** on macos
-first [[https://brew.sh][install brew]], then:
-#+begin_src shell
-brew install tmux,ttyd,wg
-#+end_src
-**  Run our install script
+Matey depends on the tools tmux, ttyd, and the [[https://github.com/coder/wgtunnel][coder/wgtunnel]] tunnel client and an runnnig instance of tunneld. These scripts are setup to use the instance of tunneld at https://try.sharing.io which is configured via [[https://github.com/sharingio/infra/tree/uk/apps/tunneld][sharingio/infra]]
+
+** One line install with the [[https://github.com/ii/matey/blob/canon/iimatey-setup.sh][iimatey-setup.sh]] setup script
 #+begin_src shell
 curl -fsSL https://raw.githubusercontent.com/ii/matey/canon/iimatey-setup.sh | bash
+#+end_src
+** Manual install
+*** tunnel client
+Compile yourself from go, or grab a precompiled release from: https://github.com/ii/wgtunnel/releases/tag/v0.1.14 and ensure it's in your PATH
+*** ttyd/tmux on ubuntu
+#+begin_src shell
+apt-get install -y ttyd tmux
+#+end_src
+*** ttyd/tmux on macos
+first [[https://brew.sh][install brew]], then:
+#+begin_src shell
+brew install ttyd tmux
 #+end_src
 * Run iimatey
 #+begin_src tmate :window iimatey

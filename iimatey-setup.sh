@@ -18,11 +18,11 @@ esac
 case $(uname -o) in
   GNU/Linux)
     sudo apt-get update
-    sudo apt-get install -y ttyd tmux wireguard-tools curl
+    sudo apt-get install -y ttyd tmux curl
     export OS=linux
     ;;
   Darwin)
-    brew install ttyd tmux wireguard-tools curl
+    brew install ttyd tmux curl
     export OS=darwin
     ;;
 esac
