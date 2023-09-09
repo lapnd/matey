@@ -28,8 +28,8 @@ case $(uname -o) in
 esac
 
 # Install tunnel from github release
-TUNNEL_RELEASE=v0.1.13
-TUNNEL_URL=https://github.com/cloudnative-coop/wgtunnel/releases/download/$TUNNEL_RELEASE/tunnel-$OS-$ARCH
+TUNNEL_RELEASE=v0.1.14
+TUNNEL_URL=https://github.com/ii/wgtunnel/releases/download/$TUNNEL_RELEASE/tunnel-$OS-$ARCH
 sudo curl -L -o /usr/local/bin/tunnel $TUNNEL_URL
 sudo chmod 0755 /usr/local/bin/tunnel # make executeable
 
