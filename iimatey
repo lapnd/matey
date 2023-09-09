@@ -53,7 +53,8 @@ case $ACTION in
     # TODO: nicer logic here to detect available port and start
     # ttyd support -p 0 (random port), but have not reliable way to grab it
     export TTYD_PORT=${TTYD_PORT:12346}
-    ttyd --writable -p $TTYD_PORT tmux -L ii at 2>&1 >$TTYD_LOGFILE &
+    # ttyd --writable -p $TTYD_PORT tmux -L ii at 2>&1 >$TTYD_LOGFILE &
+    ttyd -p $TTYD_PORT tmux -L ii at 2>&1 >$TTYD_LOGFILE &
     echo $! >$IIMATEY_DIR/ttyd.pid
     echo ttyd logs are available in $TTYD_LOGFILE
     tunnel localhost:$TTYD_PORT 2>&1 >$TUNNEL_LOGFILE &
